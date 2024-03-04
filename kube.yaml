@@ -6,7 +6,6 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  serviceName: "nginx"
   replicas: 3
   template:
     metadata:
@@ -18,11 +17,18 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: nginx-pvc
   volumeClaimTemplates:
   - metadata:
-      name: data
+      name: nginx-pvc
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ReadWriteOnce]
       resources:
         requests:
-          storage: 1Gi
+          storage: 1Gi 
