@@ -53,10 +53,11 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: www
+      annotations:
+          volume.beta.kubernetes.io/storage-class: "standard"
     spec:
       accessModes: [ReadWriteOnce]
-      storageClassName: "standard"
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
   
