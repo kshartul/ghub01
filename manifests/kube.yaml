@@ -15,14 +15,13 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: nginx
+  name: web
 spec:
   selector:
     matchLabels:
         app: nginx
   serviceName: "nginx"      
-  replicas: 3 
-  minReadySeconds: 10
+  replicas: 2
   updateStrategy:
     type: RollingUpdate
   template:
@@ -30,24 +29,13 @@ spec:
       labels:
         app: nginx
     spec:
-      terminationGracePeriodSeconds: 10
       containers:
       - name: nginx
         image: DOCKER_IMAGE
         imagePullPolicy: Always
         ports:
-        - name: www
+        - name: web
           containerPort: 80    
-        livenessProbe:
-            tcpSocket:
-              port: 9001
-            initialDelaySeconds: 5
-            periodSeconds: 10
-        readinessProbe:
-            tcpSocket:
-              port: 9001
-            initialDelaySeconds: 5
-            periodSeconds: 10
         resources:
           requests:
               cpu: 250m
