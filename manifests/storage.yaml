@@ -8,7 +8,7 @@ provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp2
   encrypted: "true"
-  zones: us-west-2a, us-west-2b, us-west-2c
+  zones: us-east-1a, us-east-1b
 reclaimPolicy: Delete
 mountOptions:
   - debug 
