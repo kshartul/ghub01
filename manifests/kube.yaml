@@ -12,6 +12,36 @@ spec:
   selector:
     app: nginx
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sk01-pv
+spec:
+  storageClassName: gp2
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Delete
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: aws://{{ AWS region }}/{{ volume ID }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: web
+  name: sk01-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: gp2
+  volumeName: sk01-pv
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -62,6 +92,7 @@ spec:
       name: www
     spec:
       accessModes: [ "ReadWriteOnce" ]
+      storageClassName: gp2
       resources:
         requests:
           storage: 1Gi
