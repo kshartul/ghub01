@@ -28,34 +28,36 @@ kind: StatefulSet
 metadata:
   name: nginx
 spec:
-  minReadySeconds: 10
-  replicas: 3
   selector:
     matchLabels:
-      app: nginx
-  serviceName: nginx
+        app: nginx
+  serviceName: "nginx"      
+  replicas: 3 
+  minReadySeconds: 10
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: nginx
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
-      - image: DOCKER_IMAGE
+      - name: nginx
+        image: DOCKER_IMAGE
         imagePullPolicy: Always
-        livenessProbe:
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          tcpSocket:
-            port: 9001
-        name: nginx
         ports:
-        - containerPort: 80
-          name: www
+        - containerPort: 8080
+        livenessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
         readinessProbe:
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          tcpSocket:
-            port: 9001
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
         resources:
           limits:
             cpu: 250m
@@ -64,18 +66,14 @@ spec:
             cpu: 250m
             memory: 1Gi
         volumeMounts:
-        - mountPath: /usr/share/nginx/html
-          name: www
-      terminationGracePeriodSeconds: 10
-  updateStrategy:
-    type: RollingUpdate
-volumeClaimTemplates:
-- metadata:
-    name: www
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 2Gi
-      storageClassName: nginx-pv 
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ReadWriteOnce]
+      storageClassName: nginx-pv
+      resources:
+        requests:
+          storage: 1Gi
