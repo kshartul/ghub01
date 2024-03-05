@@ -12,9 +12,9 @@ spec:
   resources:
     requests:
       storage: 6Gi
-  # selector:
-  #   matchLabels:
-  #     aws-availability-zone: us-west-2c
+    selector:
+      matchLabels:
+      aws-availability-zone: us-east-1a, us-east-1b
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
