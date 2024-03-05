@@ -69,13 +69,13 @@ spec:
       terminationGracePeriodSeconds: 10
   updateStrategy:
     type: RollingUpdate
-  volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 2Gi
+volumeClaimTemplates:
+- metadata:
+    name: www
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 2Gi
       storageClassName: nginx-pv 
