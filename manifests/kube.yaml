@@ -7,52 +7,20 @@ metadata:
 spec:
   ports:
   - port: 80
-    name: web
+    name: nginx
   clusterIP: None
   selector:
     app: nginx
 ---
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: gp2
-  annotations: 
-    storageclass.kubernetes.io/is-default-class: 'true'
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
-  encrypted: "true"
-  zones: us-east-1a, us-east-1b
-reclaimPolicy: Delete
-mountOptions:
-  - debug 
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: www
-  labels:
-    name: www
-spec:
-  storageClassName: gp2
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 6Gi
-    selector:
-      matchLabels:
-      aws-availability-zone: us-east-1a, us-east-1b
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: web
+  name: nginx
 spec:
   selector:
     matchLabels:
         app: nginx
-  serviceName: "nginx"      
+  serviceName: nginx    
   replicas: 2
   updateStrategy:
     type: RollingUpdate
@@ -61,6 +29,7 @@ spec:
       labels:
         app: nginx
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
       - name: nginx
         image: DOCKER_IMAGE
@@ -76,15 +45,17 @@ spec:
               cpu: 1000m
               memory: 256Mi
         volumeMounts:
-        - name: www
+        - name: log
           mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
+volumeClaimTemplates:
   - metadata:
-      name: www
+      name: log
     spec:
       accessModes: [ "ReadWriteOnce" ]
+      storageClassName: gp2
       resources:
         requests:
-          storage: 1Gi     
+          storage: 1Gi
+      
 
   
