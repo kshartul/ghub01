@@ -47,8 +47,8 @@ spec:
   - metadata:
       name: www
     spec:
-      storageClassName: gp2-retain
       accessModes: [ReadWriteOnce]
+      storageClassName: "standard"
       resources:
         requests:
           storage: 1Gi
