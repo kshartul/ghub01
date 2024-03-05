@@ -54,6 +54,4 @@ jobs:
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
         sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" manifests/kube.yaml && \
-        kubectl apply -f manifests/pv.yaml
-        kubectl apply -f manifests/pvc.yaml
         kubectl apply -f manifests/kube.yaml
