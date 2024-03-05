@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  clusterIP: None
+  ports:
+  - name: web
+    port: 80
+  selector:
+    app: nginx
+---
+apiVersion: v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-4af69aab
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: www-pvc
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: efs-sc
+    resources:
+      requests:
+        storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: DOCKER_IMAGE
+        imagePullPolicy: Always
+        livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          tcpSocket:
+            port: 9001
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: www
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          tcpSocket:
+            port: 9001
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: www
+      terminationGracePeriodSeconds: 10
+  updateStrategy:
+    type: RollingUpdate
+volumeClaimTemplates:
+- metadata:
+    name: www
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 2Gi
+    storageClassName: gp2
