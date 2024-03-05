@@ -49,8 +49,8 @@ spec:
       name: www
     spec:
       accessModes: [ReadWriteOnce]
-      storageClassName: "default"
+      storageClassName: "gp2"
       resources:
         requests:
-          storage: 2Gi
+          storage: 100Gi
   
