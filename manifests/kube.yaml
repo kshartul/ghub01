@@ -59,12 +59,12 @@ spec:
         - name: www
           mountPath: /usr/share/nginx/html
 volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi     
+- metadata:
+    name: www
+  spec:
+    accessModes: [ "ReadWriteOnce" ]
+    resources:
+      requests:
+        storage: 1Gi     
 
   
