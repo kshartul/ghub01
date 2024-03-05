@@ -8,7 +8,7 @@ spec:
         app: nginx
   serviceName: "nginx"      
   replicas: 3 
-  minReadySeconds: 10
+  minReadySeconds: 60
   updateStrategy:
     type: RollingUpdate
   template:
@@ -16,7 +16,7 @@ spec:
       labels:
         app: nginx
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 60
       containers:
       - name: nginx
         image: DOCKER_IMAGE
@@ -27,13 +27,13 @@ spec:
         livenessProbe:
             tcpSocket:
               port: 9001
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 20
+            periodSeconds: 20
         readinessProbe:
             tcpSocket:
               port: 9001
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 20
+            periodSeconds: 20
         resources:
           limits:
             cpu: 250m
@@ -49,7 +49,7 @@ spec:
       name: www
     spec:
       accessModes: [ReadWriteOnce]
-      storageClassName: "gp2"
+      storageClassName: "standard"
       resources:
         requests:
           storage: 100Gi
