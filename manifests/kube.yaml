@@ -46,10 +46,10 @@ spec:
       volumes:
       - name: www
         persistentVolumeClaim:
-          claimName: nginx-config
+          claimName: www-pvc
   volumeClaimTemplates:
   - metadata:
-      name: nginx-config
+      name: www-pvc
     spec:
       accessModes: [ReadWriteOnce]
       resources:
