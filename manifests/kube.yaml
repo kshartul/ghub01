@@ -37,14 +37,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: www-pvc
+  name: efs-claim
   spec:
     accessModes:
       - ReadWriteOnce
     storageClassName: efs-sc
     resources:
       requests:
-        storage: 10Gi
+        storage: 5Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -101,3 +101,5 @@ volumeClaimTemplates:
       requests:
         storage: 2Gi
     storageClassName: gp2
+
+
