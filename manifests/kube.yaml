@@ -9,7 +9,7 @@ spec:
   serviceName: "nginx"      
   replicas: 3 
   minReadySeconds: 10
-  strategy:
+  updateStrategy:
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
