@@ -22,7 +22,8 @@ spec:
         image: DOCKER_IMAGE
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - name: www
+          containerPort: 80    
         livenessProbe:
             tcpSocket:
               port: 9001
@@ -46,9 +47,9 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: www
-      storageClassName: standard
     spec:
       accessModes: [ReadWriteOnce]
+      storageClassName: "default"
       resources:
         requests:
           storage: 2Gi
