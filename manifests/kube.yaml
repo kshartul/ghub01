@@ -35,8 +35,18 @@ spec:
         image: DOCKER_IMAGE
         imagePullPolicy: Always
         ports:
-        - name: web
-          containerPort: 80    
+        - name: www
+          containerPort: 80  
+        livenessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        readinessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10  
         resources:
           requests:
               cpu: 250m
@@ -45,11 +55,11 @@ spec:
               cpu: 1000m
               memory: 256Mi
         volumeMounts:
-        - name: log
+        - name: www
           mountPath: /usr/share/nginx/html
 volumeClaimTemplates:
   - metadata:
-      name: log
+      name: www
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: gp2
