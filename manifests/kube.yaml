@@ -12,21 +12,10 @@ spec:
   selector:
     app: nginx
 ---
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: nginx-pv  
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: efs.csi.aws.com
-parameters:
-  type: gp2
-  fsType: ext4
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: nginx
+  name: web
 spec:
   selector:
     matchLabels:
@@ -72,8 +61,7 @@ spec:
   - metadata:
       name: www
     spec:
-      accessModes: [ReadWriteOnce]
-      storageClassName: nginx-pv
+      accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 1Gi
