@@ -1,10 +1,3 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: ebs-sc
-provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -53,8 +46,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: www
-      annotations:
-          volume.beta.kubernetes.io/storage-class: "standard"
+      storageClassName: "standard"
     spec:
       accessModes: [ReadWriteOnce]
       resources:
