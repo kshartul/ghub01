@@ -9,6 +9,11 @@ spec:
   serviceName: "nginx"      
   replicas: 3 
   minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -21,6 +26,16 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        livenessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        readinessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
         resources:
           limits:
             cpu: 250m
@@ -43,8 +58,4 @@ spec:
       resources:
         requests:
           storage: 2Gi
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+  
