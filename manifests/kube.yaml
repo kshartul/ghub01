@@ -46,7 +46,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: www
-      storageClassName: "standard"
+      storageClassName: standard
     spec:
       accessModes: [ReadWriteOnce]
       resources:
