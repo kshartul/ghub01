@@ -1,19 +1,16 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: Service
 metadata:
-  name: nginx-with-pvc
+  name: nginx
   labels:
-    name: nginx-with-pvc
+    app: nginx
 spec:
-  storageClassName: gp2
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 6Gi
-  # selector:
-  #   matchLabels:
-  #     aws-availability-zone: us-west-2c
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
 ---
 apiVersion: apps/v1
 kind: StatefulSet
